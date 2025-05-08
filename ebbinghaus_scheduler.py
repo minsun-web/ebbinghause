@@ -90,7 +90,7 @@ if current_user:
         except FileNotFoundError:
             df = pd.DataFrame(columns=['날짜', '내용', '복습 1', '복습 2', '복습 3', '복습 4', '완료 여부'])
 
-        st.title(f'환영합니다, {current_user}!')
+        st.title(f'평생기억 하자피🐙, {current_user}!')
 
         # 학습 내용 입력
         st.header("오늘 학습 내용을 입력하세요")
