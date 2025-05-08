@@ -133,7 +133,12 @@ if current_user:
         if len(df) > 0:
             st.header('Edit or Update Entries')
             # 복습 완료 표시
-            selected = st.selectbox('Select a row to mark as reviewed:', df['Content'])
+        # 복습 완료 표시
+        selected = st.selectbox('Select a row to mark as reviewed:', df['Content'])
+        if st.button('Mark as Reviewed'):
+            df.loc[df['Content'] == selected, 'Completed'] = True
+            df.to_csv(data_path, index=False)
+            st.success(f'Marked "{selected}" as reviewed!')
             if st.button('Mark as Reviewed'):
                 df.loc[df['Content'] == selected, 'Completed'] = True
                 df.to_csv(data_path, index=False)
@@ -211,7 +216,12 @@ if current_user:
         df.to_csv(data_path, index=False)
         st.success(f'Updated "{new_content}"!')
             # 복습 완료 표시
-            selected = st.selectbox('Select a row to mark as reviewed:', df['Content'])
+        # 복습 완료 표시
+        selected = st.selectbox('Select a row to mark as reviewed:', df['Content'])
+        if st.button('Mark as Reviewed'):
+            df.loc[df['Content'] == selected, 'Completed'] = True
+            df.to_csv(data_path, index=False)
+            st.success(f'Marked "{selected}" as reviewed!')
             if st.button('Mark as Reviewed'):
                 df.loc[df['Content'] == selected, 'Completed'] = True
                 df.to_csv(data_path, index=False)
@@ -220,4 +230,3 @@ if current_user:
                 df.loc[df['Content'] == selected, 'Completed'] = True
                 df.to_csv(data_path, index=False)
                 st.success(f'Marked "{selected}" as reviewed!')
-
