@@ -39,7 +39,7 @@ def authenticate(username, password):
 
 # 로그인 함수
 def login():
-    st.title("🐙꿈을 꾸는 문어")
+    st.title("꿈을 꾸는 문어🐙")
     option = st.selectbox("옵션 선택", ["로그인", "회원가입"])
     username = st.text_input("사용자 이름")
     password = st.text_input("비밀번호", type="password")
