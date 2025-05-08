@@ -95,7 +95,7 @@ if current_user:
         # 학습 내용 입력
         st.header("오늘 학습 내용을 입력하세요")
         today = datetime.now().strftime('%Y-%m-%d')
-        content = st.text_input('오늘 무엇을 배웠나요?')
+        content = st.text_input('오늘 무엇을 배웠나요><?')
 
         if st.button('일정에 추가') and content:
             review_1 = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
