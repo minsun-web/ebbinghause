@@ -110,6 +110,15 @@ if current_user:
         # 복습 완료 표시
         st.header('Edit or Update Entries')
         if len(df) > 0:
+    st.header('Edit or Update Entries')
+    edit_content = st.selectbox('Select an entry to edit:', df['Content'])
+    new_content = st.text_input('Update Content', value=edit_content)
+    update_status = st.checkbox('Mark as Completed', value=bool(df.loc[df['Content'] == edit_content, 'Completed'].values[0]))
+    if st.button('Update Entry'):
+        df.loc[df['Content'] == edit_content, 'Content'] = new_content
+        df.loc[df['Content'] == new_content, 'Completed'] = update_status
+        df.to_csv(data_path, index=False)
+        st.success(f'Updated "{new_content}"!')
     # 수정할 항목 선택
     edit_content = st.selectbox('Select an entry to edit:', df['Content'])
     new_content = st.text_input('Update Content', value=edit_content)
@@ -124,4 +133,3 @@ if current_user:
                 df.loc[df['Content'] == selected, 'Completed'] = True
                 df.to_csv(data_path, index=False)
                 st.success(f'Marked "{selected}" as reviewed!')
-
