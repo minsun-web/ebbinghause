@@ -21,11 +21,11 @@ def register_user(username, password):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     df_users = pd.read_csv(USER_FILE)
     if username in df_users['Username'].values:
-        return False, '이미 존재하는 사용자입니다'
+        return False, '사용자 이름이 이미 존재합니다.'
     new_user = pd.DataFrame([[username, hashed_password]], columns=['Username', 'Password'])
     df_users = pd.concat([df_users, new_user], ignore_index=True)
     df_users.to_csv(USER_FILE, index=False)
-    return True, 'User registered successfully'
+    return True, '사용자 등록 성공!'
 
 # 사용자 인증 함수
 def authenticate(username, password):
@@ -39,29 +39,29 @@ def authenticate(username, password):
 
 # 로그인 함수
 def login():
-    st.title("Login")
-    option = st.selectbox("Select an option", ["Login", "Register"])
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    st.title("로그인")
+    option = st.selectbox("옵션 선택", ["로그인", "회원가입"])
+    username = st.text_input("사용자 이름")
+    password = st.text_input("비밀번호", type="password")
 
-    if option == "Register":
-        new_password = st.text_input("Create Password", type="password")
-        if st.button("Register"):
+    if option == "회원가입":
+        new_password = st.text_input("비밀번호 생성", type="password")
+        if st.button("회원가입"):
             success, message = register_user(username, new_password)
             if success:
                 st.success(message)
             else:
                 st.error(message)
 
-    if option == "Login":
+    if option == "로그인":
         if username == 'admin' and password == 'adminpass':
-            st.success("Admin login successful!")
+            st.success("관리자 로그인 성공!")
             return username
         elif authenticate(username, password):
-            st.success("User login successful!")
+            st.success("사용자 로그인 성공!")
             return username
         else:
-            st.error("Invalid username or password")
+            st.error("잘못된 사용자 이름 또는 비밀번호입니다.")
             return None
 
 # 로그인 실행
@@ -72,8 +72,8 @@ if current_user:
     data_path = os.path.join(DATA_DIR, f"{current_user}_review_schedule.csv")
 
     if current_user == 'admin':
-        st.title('Admin Dashboard')
-        st.header('All Users Data')
+        st.title('관리자 대시보드')
+        st.header('모든 사용자 데이터')
         all_files = os.listdir(DATA_DIR)
         for file in all_files:
             if file.endswith('_review_schedule.csv'):
@@ -84,37 +84,37 @@ if current_user:
         try:
             df = pd.read_csv(data_path)
         except FileNotFoundError:
-            df = pd.DataFrame(columns=['Date', 'Content', 'Review 1', 'Review 2', 'Review 3', 'Review 4', 'Completed'])
+            df = pd.DataFrame(columns=['날짜', '내용', '복습 1', '복습 2', '복습 3', '복습 4', '완료 여부'])
 
-        st.title(f'Welcome, {current_user}!')
+        st.title(f'환영합니다, {current_user}!')
 
         # 학습 내용 입력
-        st.header("오늘의 학습 내용을 입력하세요")
+        st.header("Enter Today's Learning Content")
         today = datetime.now().strftime('%Y-%m-%d')
-        content = st.text_input('오늘 공부한 내용을 알려주세요><')
+        content = st.text_input('오늘 무엇을 배웠나요?')
 
-        if st.button('Add to Schedule') and content:
+        if st.button('일정에 추가') and content:
             review_1 = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
             review_2 = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
             review_3 = (datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')
             review_4 = (datetime.now() + timedelta(days=90)).strftime('%Y-%m-%d')
-            new_row = {'Date': today, 'Content': content, 'Review 1': review_1, 'Review 2': review_2, 'Review 3': review_3, 'Review 4': review_4, 'Completed': False}
+            new_row = {'날짜': today, '내용': content, '복습 1': review_1, '복습 2': review_2, '복습 3': review_3, '복습 4': review_4, '완료 여부': False}
             df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
             df.to_csv(data_path, index=False)
-            st.success('Learning content added!')
+            st.success('학습 내용이 추가되었습니다!')
 
         # 복습 일정 표시 및 수정 기능
-        st.header('Review Schedule')
+        st.header('복습 일정')
         if not df.empty:
-            selected_row = st.selectbox('Select a row to update:', df.index)
+            selected_row = st.selectbox('수정할 행을 선택하세요:', df.index)
             if selected_row is not None:
-                with st.expander(f'Edit Row {selected_row}'):
-                    selected_content = df.loc[selected_row, 'Content']
-                    updated_content = st.text_input('Update Content', value=selected_content)
-                    completed = st.checkbox('Completed', value=df.loc[selected_row, 'Completed'])
-                    if st.button('Update'):
-                        df.loc[selected_row, 'Content'] = updated_content
-                        df.loc[selected_row, 'Completed'] = completed
+                with st.expander(f'행 수정 {selected_row}'):
+                    selected_content = df.loc[selected_row, '내용']
+                    updated_content = st.text_input('내용 수정', value=selected_content)
+                    completed = st.checkbox('완료 여부', value=df.loc[selected_row, '완료 여부'])
+                    if st.button('수정'):
+                        df.loc[selected_row, '내용'] = updated_content
+                        df.loc[selected_row, '완료 여부'] = completed
                         df.to_csv(data_path, index=False)
-                        st.success('Updated successfully!')
+                        st.success('성공적으로 수정되었습니다!')
         st.dataframe(df)
