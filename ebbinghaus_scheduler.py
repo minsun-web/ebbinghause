@@ -83,13 +83,17 @@ if current_user:
     else:
         try:
             df = pd.read_csv(data_path)
+            # 컬럼명이 영어로 되어 있을 경우 한글로 변환
+            if 'Content' in df.columns:
+                df.rename(columns={'Content': '내용', 'Date': '날짜', 'Review 1': '복습 1', 'Review 2': '복습 2', 'Review 3': '복습 3', 'Review 4': '복습 4', 'Completed': '완료 여부'}, inplace=True)
+                df.to_csv(data_path, index=False)
         except FileNotFoundError:
             df = pd.DataFrame(columns=['날짜', '내용', '복습 1', '복습 2', '복습 3', '복습 4', '완료 여부'])
 
         st.title(f'환영합니다, {current_user}!')
 
         # 학습 내용 입력
-        st.header("Enter Today's Learning Content")
+        st.header("오늘 학습 내용을 입력하세요")
         today = datetime.now().strftime('%Y-%m-%d')
         content = st.text_input('오늘 무엇을 배웠나요?')
 
