@@ -105,12 +105,14 @@ if current_user:
 
         # 복습 일정 표시 및 수정 기능
         st.header('Review Schedule')
-        for index, row in df.iterrows():
-            updated_content = st.text_input(f'Update Content {index+1}', value=row['Content'], key=f'content_{index}')
-            completed = st.checkbox('Completed', value=row['Completed'], key=f'completed_{index}')
-            if st.button('Update', key=f'update_{index}'):
-                df.at[index, 'Content'] = updated_content
-                df.at[index, 'Completed'] = completed
+        selected_row = st.selectbox('Select a row to update:', df.index)
+        if selected_row is not None:
+            selected_content = df.loc[selected_row, 'Content']
+            updated_content = st.text_input('Update Content', value=selected_content)
+            completed = st.checkbox('Completed', value=df.loc[selected_row, 'Completed'])
+            if st.button('Update'):
+                df.loc[selected_row, 'Content'] = updated_content
+                df.loc[selected_row, 'Completed'] = completed
                 df.to_csv(data_path, index=False)
                 st.success('Updated successfully!')
 
