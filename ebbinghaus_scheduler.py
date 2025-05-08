@@ -39,7 +39,7 @@ def authenticate(username, password):
 
 # 로그인 함수
 def login():
-    st.title("로그인")
+    st.title("🐙꿈을 꾸는 문어")
     option = st.selectbox("옵션 선택", ["로그인", "회원가입"])
     username = st.text_input("사용자 이름")
     password = st.text_input("비밀번호", type="password")
@@ -90,7 +90,7 @@ if current_user:
         except FileNotFoundError:
             df = pd.DataFrame(columns=['날짜', '내용', '복습 1', '복습 2', '복습 3', '복습 4', '완료 여부'])
 
-        st.title(f'평생기억 하자피🐙, {current_user}!')
+        st.title(f'평생기억 하자피🐙 {current_user}!')
 
         # 학습 내용 입력
         st.header("오늘 학습 내용을 입력하세요")
