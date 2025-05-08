@@ -21,7 +21,7 @@ def register_user(username, password):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     df_users = pd.read_csv(USER_FILE)
     if username in df_users['Username'].values:
-        return False, 'Username already exists'
+        return False, '이미 존재하는 사용자입니다'
     new_user = pd.DataFrame([[username, hashed_password]], columns=['Username', 'Password'])
     df_users = pd.concat([df_users, new_user], ignore_index=True)
     df_users.to_csv(USER_FILE, index=False)
@@ -89,9 +89,9 @@ if current_user:
         st.title(f'Welcome, {current_user}!')
 
         # 학습 내용 입력
-        st.header("Enter Today's Learning Content")
+        st.header("오늘의 학습 내용을 입력하세요")
         today = datetime.now().strftime('%Y-%m-%d')
-        content = st.text_input('What did you learn today?')
+        content = st.text_input('오늘 공부한 내용을 알려주세요><')
 
         if st.button('Add to Schedule') and content:
             review_1 = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
